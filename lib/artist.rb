@@ -1,6 +1,8 @@
-class Artist 
-  
-  attr_accessor :name, :songs
+require_relative '../concerns/findable.rb'
+class Artist
+
+  attr_accessor :name
+  attr_reader :songs
   extend Concerns::Findable
 
 @@all = []    #class variable
@@ -10,47 +12,39 @@ class Artist
 def initialize(name)   #initialize method
     @name = name  #instance variable
     @songs = []
-    save
   end
-  
+
   def self.all     #capital A Artist wants to call the all method
-  @@all 
+  @@all
 end
 
 def self.destroy_all
-    @@all = []           #resets the @@all class variable of empty array
+    all.clear           #resets the @@all class variable of empty array
   end
 
-def save 
-  @@all << self       
-end 
+def save
+  self.class.all << self
+end
 
 
   def self.create(artist)
-    self.new(artist)
+    artist=new(artist)
+    artist.save
+    artist
   end
-  
+
   def add_song(song)
-    if song.artist == nil
-      song.artist = self
-    end
-    
-    if !@songs.include?(song)
-      @songs << song 
-    end
+    @songs << song unless songs.include?(song)
+    song.artist = self if song.artist == nil
+
   end
-  
+
+
   def genres
-    @new_array = []
-    @songs.each do |song|
-      if @new_array.include?(song.genre)
-        nil
-      else
-        @new_array << song.genre
-      end
-    end
-    @new_array
+  songs.collect do |song|
+    song.genre
+  end.uniq
   end
-    
-  
+
+
  end

@@ -1,11 +1,11 @@
 class MusicLibraryController
   attr_accessor :path
-  
+
   def initialize(path = './db/mp3s')
     importer = MusicImporter.new(path)
     importer.import
   end
-  
+
    def call
     input = ''
 
@@ -42,17 +42,17 @@ class MusicLibraryController
     end
 
   end
-  
+
 def list_songs
-    Song.all.sort{|a, b| a.name <=> b.name}.each_with_index do |s, i|
+    Song.all.sort{|a, b| a.name <=> b.name}.uniq.each_with_index do |s, i|
       puts "#{i+1}. #{s.artist.name} - #{s.name} - #{s.genre.name}"
     end
   end
-  
-   def list_songs
-    Song.all.sort {|a,b| a.name <=> b.name}.each.with_index(1) do |song, i|
-      puts "#{i}. #{song.artist.name} - #{song.name} - #{song.genre.name}"
+
+  def list_artists
+    Artist.all.sort{|a, b| a.name <=> a.name}.uniq.each_with_index do |s, i|
+      puts "#{i+1}. #{s.name}"
     end
   end
-  
+
 end

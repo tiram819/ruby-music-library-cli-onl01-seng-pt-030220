@@ -1,6 +1,9 @@
-class Genre 
-  
-  attr_accessor :name, :songs
+
+require_relative '../concerns/findable.rb'
+class Genre
+
+  attr_accessor :name
+  attr_reader :songs
   extend Concerns::Findable
 
 @@all = []    #class variable
@@ -10,37 +13,32 @@ class Genre
 def initialize(name)   #initialize method
     @name = name  #instance variable
     @songs = []
-    save
   end
-  
+
   def self.all     #capital A Artist wants to call the all method
-  @@all 
+  @@all
 end
 
 def self.destroy_all
-    @@all = []           #resets the @@all class variable of empty array
+  all.clear             #resets the @@all class variable of empty array
   end
 
-def save 
+def save
   @@all << self       #instance(single song) we want to push to the array to save it
-end 
+end
 
 
   def self.create(genre)
-    self.new(genre)
+    genre=self.new(genre)
+    genre.save
+    genre
   end
-  
-  
+
+
   def artists
-    @new_array = []
-    @songs.each do |song|
-      if @new_array.include?(song.artist)
-        nil
-      else
-        @new_array << song.artist
-      end
-    end
-    @new_array
+    songs.collect do |song|
+      song.artist
+    end.uniq
   end
-  
+
 end
